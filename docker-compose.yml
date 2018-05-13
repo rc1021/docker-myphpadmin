@@ -1,0 +1,30 @@
+version: '2'
+services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOST=database
+      - PHP_UPLOAD_MAX_FILESIZE=100M
+    ports:
+      - 33060:80
+    volumes_from:
+      - volumes_data
+    links:
+      - database
+
+  database:
+    image: mariadb:latest
+    volumes_from:
+      - volumes_data
+    ports:
+      - "33061:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "secret"
+      MYSQL_DATABASE: "homestead"
+      MYSQL_USER: "homestead"
+      MYSQL_PASSWORD: "secret"
+
+  volumes_data:
+    image: tianon/true
+    volumes:
+      - ./store/database:/var/lib/mysql
